@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A simple hotkey library",
   "license": "MIT",
-  "repository": "ambar/gogen",
+  "repository": "ambar/rx-hotkey",
   "module": "src/hotkey.js",
   "main": "dist/hotkey.js",
   "scripts": {
