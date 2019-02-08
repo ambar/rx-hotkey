@@ -1,0 +1,36 @@
+{
+  "name": "rx-hotkey",
+  "version": "0.0.1",
+  "description": "A simple hotkey library",
+  "license": "MIT",
+  "repository": "ambar/gogen",
+  "module": "src/hotkey.js",
+  "main": "dist/hotkey.js",
+  "scripts": {
+    "prepare": "npm test && npm run build",
+    "start": "docz dev",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch --notify",
+    "build": "rollup -f cjs $npm_package_module -o $npm_package_main"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "jest": {
+    "preset": "rollup-jest"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.4.0"
+  },
+  "devDependencies": {
+    "docz": "^0.13.7",
+    "docz-theme-default": "^0.13.7",
+    "jest": "^24.1.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "rollup": "^1.1.2",
+    "rollup-jest": "^0.0.2",
+    "rxjs": "^6.4.0"
+  }
+}

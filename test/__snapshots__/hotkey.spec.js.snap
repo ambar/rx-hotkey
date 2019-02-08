@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createHotkey binds hotkey 1`] = `
+Map {
+  <div /> => Map {
+    "?" => Object {},
+  },
+}
+`;
+
+exports[`createHotkey lists key bindings 1`] = `
+Map {
+  "global" => Map {
+    "f" => Object {
+      "meta": Object {
+        "foo": 1,
+      },
+    },
+  },
+  "sidebar" => Map {
+    "g" => Object {
+      "meta": Object {
+        "bar": 1,
+      },
+    },
+  },
+}
+`;
+
+exports[`hotkey binds modifiers 1`] = `
+Map {
+  "global" => Map {
+    "ctrl+r" => Object {},
+    "ctrl+alt+r" => Object {},
+    "ctrl+alt+shift+r" => Object {},
+    "ctrl+alt+shift+meta+r" => Object {},
+  },
+}
+`;
