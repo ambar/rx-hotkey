@@ -60,4 +60,4 @@ unlisten()
 
 ## Examples
 
-- [TimelineExample](./examples/TimelineExample.js) React Hooks example
+- [TimelineExample](https://ambar.li/rx-hotkey/) React Hooks example
