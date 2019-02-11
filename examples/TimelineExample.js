@@ -300,10 +300,14 @@ const KeyBindings = () => {
 }
 
 export default () => {
-  useHotkey('g t', () => window.scrollTo(0, 0), {name: 'Go to top'})
-  useHotkey('g b', () => window.scrollTo(0, document.body.scrollHeight), {
-    name: 'Go to bottom',
-  })
+  const scrollToTop = () => window.scrollTo(0, 0)
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight)
+  useHotkey('g t', scrollToTop, {name: 'Scroll to top'})
+  useHotkey('g b', scrollToBottom, {name: 'Scroll to bottom'})
+  // ignores cases
+  useHotkey('alt+home', scrollToTop)
+  useHotkey('Alt+End', scrollToBottom)
+
   return (
     <div css={{backgroundColor: '#e9e9e9'}}>
       <SearchBar />

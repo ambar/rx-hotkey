@@ -37,13 +37,17 @@ export const parseHotkeys = keys =>
       }, hotkey)
   })
 
-const matchObject = (obj, partial) =>
-  Object.keys(partial).every(k => partial[k] === obj[k])
+export const matchObject = (obj, partial, comparator = (a, b) => a === b) =>
+  Object.keys(partial).every(k => comparator(partial[k], obj[k]))
 
 const shiftedKeys = '~!@#$%^&*()_+{}|:"<>?'
 
 export const matchEvent = (event, hotkey) =>
   matchObject(
     event,
-    shiftedKeys.includes(hotkey.key) ? {...hotkey, shiftKey: true} : hotkey
+    shiftedKeys.includes(hotkey.key) ? {...hotkey, shiftKey: true} : hotkey,
+    (a, b) =>
+      typeof a === 'string' && typeof b === 'string'
+        ? a.toLowerCase() === b.toLowerCase()
+        : a === b
   )
