@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
-import {animated, useSpring} from 'react-spring'
-import React, {Fragment, useRef, useState} from 'react'
+import {useSpring} from 'react-spring'
+import dialogPolyfill from 'dialog-polyfill'
+import React, {Fragment, useRef, useState, useEffect} from 'react'
 import {
   useHotkey,
   useScopedHotkey,
@@ -158,24 +159,18 @@ const ShareButton = () => {
 }
 
 const HelpDialog = () => {
-  const [open, setOpen] = useState(false)
   const nodeRef = useRef(null)
+
+  useEffect(() => {
+    dialogPolyfill.registerDialog(nodeRef.current)
+  })
+
   const showHelpDialog = () => {
     const dialog = nodeRef.current
-    if (!dialog.showModal) {
-      // Firefox
-      setOpen(true)
-      return
-    }
     if (!dialog.open) dialog.showModal()
   }
   const hideHelpDialog = () => {
     const dialog = nodeRef.current
-    if (!dialog.showModal) {
-      // Firefox
-      setOpen(false)
-      return
-    }
     if (dialog.open) dialog.close()
   }
   useHotkey('?', showHelpDialog, {name: 'Show help'})
@@ -183,13 +178,20 @@ const HelpDialog = () => {
 
   return (
     <dialog
-      open={open}
       ref={nodeRef}
       css={{
         position: 'fixed',
+        // CSS polyfill
+        margin: 0,
+        border: '3px solid',
         top: '50%',
-        transform: 'translate3d(0, -50%, 0)',
+        left: '50%',
+        transform: 'translate3d(-50%, -50%, 0)',
         maxWidth: '600px',
+        background: 'white',
+        '&:not([open])': {
+          display: 'none',
+        },
       }}
     >
       <KeyBindings />
