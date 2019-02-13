@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
-import React, {useRef, useState} from 'react'
+import {animated, useSpring} from 'react-spring'
+import React, {Fragment, useRef, useState} from 'react'
 import {
   useHotkey,
   useScopedHotkey,
@@ -283,12 +284,12 @@ const KeyBindings = () => {
                 .map(
                   ([keys, {name}]) =>
                     name && (
-                      <React.Fragment key={keys}>
+                      <Fragment key={keys}>
                         <dt>
                           <kbd>{keys}</kbd>
                         </dt>
                         <dd>{name}</dd>
-                      </React.Fragment>
+                      </Fragment>
                     )
                 )}
             </dl>
@@ -299,15 +300,27 @@ const KeyBindings = () => {
   )
 }
 
-export default () => {
-  const scrollToTop = () => window.scrollTo(0, 0)
-  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight)
+const GlobalScroll = () => {
+  const [_, set] = useSpring(() => ({
+    to: {top: 0},
+    onFrame(e) {
+      window.scrollTo({top: e.top})
+    },
+  }))
+  const scrollToTop = () => set({top: 0})
+  const scrollToBottom = () =>
+    set({top: document.body.scrollHeight - window.innerHeight})
+
   useHotkey('g t', scrollToTop, {name: 'Scroll to top'})
   useHotkey('g b', scrollToBottom, {name: 'Scroll to bottom'})
   // ignores cases
   useHotkey('alt+home', scrollToTop)
   useHotkey('Alt+End', scrollToBottom)
 
+  return null
+}
+
+export default () => {
   return (
     <div css={{backgroundColor: '#e9e9e9'}}>
       <SearchBar />
@@ -319,6 +332,7 @@ export default () => {
         <Receptacle>Footer</Receptacle>
       </footer>
       <HelpDialog />
+      <GlobalScroll />
     </div>
   )
 }
