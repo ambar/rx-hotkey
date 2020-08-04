@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 import {useSpring} from 'react-spring'
-import dialogPolyfill from 'dialog-polyfill'
 import React, {Fragment, useRef, useState, useEffect} from 'react'
 import {
   useHotkey,
@@ -9,6 +8,11 @@ import {
   useScopedHotkeyContextProvider,
   useKeyBindings,
 } from './hooks'
+
+let dialogPolyfill
+if (typeof window !== 'undefined') {
+  dialogPolyfill = require('dialog-polyfill')
+}
 
 export const useListHotkey = selector => {
   const getFocusableItems = () => [...selector()]
