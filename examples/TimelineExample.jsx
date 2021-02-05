@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import {jsx} from '@emotion/core'
+import {jsx} from '@emotion/react'
 import {useSpring} from 'react-spring'
-import React, {Fragment, useRef, useState, useEffect} from 'react'
+import {Fragment, useRef, useState, useEffect} from 'react'
 import {
   useHotkey,
   useScopedHotkey,
@@ -9,10 +9,11 @@ import {
   useKeyBindings,
 } from './hooks'
 
-let dialogPolyfill
-if (typeof window !== 'undefined') {
-  dialogPolyfill = require('dialog-polyfill')
-}
+import dialogPolyfill from 'dialog-polyfill'
+// let dialogPolyfill
+// if (typeof window !== 'undefined') {
+//   dialogPolyfill = require('dialog-polyfill')
+// }
 
 export const useListHotkey = selector => {
   const getFocusableItems = () => [...selector()]
@@ -252,6 +253,7 @@ const KeyBindings = () => {
         css={{
           display: 'flex',
           flexWrap: 'wrap',
+          lineHeight: 1.8,
         }}
       >
         {[...keyBindings].map(([scope, bindings]) => (

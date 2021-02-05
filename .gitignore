@@ -2,7 +2,7 @@
 /node_modules
 /coverage
 /dist
-/.docz
+/examples/dist
 
 # Files
 *.log
