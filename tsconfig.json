@@ -1,0 +1,11 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES6",
+    "esModuleInterop": true,
+    "declaration": true,
+    "moduleResolution": "Node",
+    "forceConsistentCasingInFileNames": true
+  }
+}

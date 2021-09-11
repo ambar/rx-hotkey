@@ -2,7 +2,7 @@
 
 exports[`createHotkey binds hotkey 1`] = `
 Map {
-  <div /> => Map {
+  "global" => Map {
     "?" => Object {},
   },
 }

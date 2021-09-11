@@ -1,18 +1,26 @@
 export const canUseDOM = typeof document !== 'undefined'
 
 // https://mdn.io/KeyboardEvent/key/Key_Values#Modifier_keys
-const isModifier = key => ['Control', 'Shift', 'Alt', 'Meta'].includes(key)
+const isModifier = (key: string) => ['Control', 'Shift', 'Alt', 'Meta'].includes(key)
 
-const isInput = el =>
+const isInput = (el: HTMLElement) =>
   /^(input|textarea|select)$/i.test(el.tagName) || el.isContentEditable
 
-export const isValidEvent = event =>
-  !isInput(event.target) && !isModifier(event.key)
+export const isValidEvent = (event: KeyboardEvent) =>
+  !isInput(event.target as HTMLElement) && !isModifier(event.key)
 
-export const parseHotkeys = keys =>
+type ComboKey = {
+  key: string,
+  ctrlKey: boolean,
+  altKey: boolean,
+  metaKey: boolean,
+  shiftKey: boolean,
+}
+
+export const parseHotkeys = (keys: string) =>
   keys.split(' ').map(key => {
     const hotkey = {
-      key: null,
+      key: '',
       ctrlKey: false,
       altKey: false,
       metaKey: false,
@@ -37,14 +45,15 @@ export const parseHotkeys = keys =>
       }, hotkey)
   })
 
-export const matchObject = (obj, partial, comparator = (a, b) => a === b) =>
-  Object.keys(partial).every(k => comparator(partial[k], obj[k]))
+export const matchObject = <T extends {}>(obj: T, partial: T, comparator = (a: unknown, b: unknown) => a === b) =>
+  // @ts-ignore Element implicitly has an 'any' type
+  Object.keys(partial).every((k) => comparator(partial[k], obj[k]))
 
 const shiftedKeys = '~!@#$%^&*()_+{}|:"<>?'
 
-export const matchEvent = (event, hotkey) =>
+export const matchEvent = (event: KeyboardEvent, hotkey: ComboKey) =>
   matchObject(
-    event,
+    event as ComboKey,
     shiftedKeys.includes(hotkey.key) ? {...hotkey, shiftKey: true} : hotkey,
     (a, b) =>
       typeof a === 'string' && typeof b === 'string'

@@ -23,11 +23,11 @@ import {hotkey, createHotkey} from 'rx-hotkey'
 const unbind = hotkey('?', showHelp)
 unbind()
 
-// combo, with modifers
-hotkey('ctrl+r', event => {})
+// combo, with modifiers
+hotkey('ctrl+r', (event) => {})
 // sequences, space separated keys
-hotkey('c i', events => {})
-hotkey('meta+k meta+v', events => {})
+hotkey('c i', (...events) => {})
+hotkey('meta+k meta+v', (...events) => {})
 
 // bind scoped hotkey
 const scopedHotkey = createHotkey(sidebarElement)
@@ -38,16 +38,20 @@ unbind()
 To get or listen bindings:
 
 ```js
-import {getKeyBindings, listenKeyBindings} from 'rx-hotkey'
+import {hotkey, getKeyBindings, listenKeyBindings} from 'rx-hotkey'
+
+hotkey('ctrl+r', (event) => {}, {meta: 1})
+const scopedHotkey = createHotkey(sidebarElement, {scope: 'sidebar'})
+const unbind = scopedHotkey('g h', goHome, {meta: 2})
 
 getKeyBindings()
 /* =>
 Map {
   "global" => Map {
-    "ctrl+r" => Object {},
+    "ctrl+r" => Object {meta: 1},
   },
-  "myScope" => Map {
-    "g" => Object {},
+  "sidebar" => Map {
+    "g h" => Object {meta: 2},
   },
 }
 */

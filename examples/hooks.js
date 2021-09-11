@@ -3,19 +3,20 @@ import React, {
   useLayoutEffect,
   useContext,
   useState,
-  useCallback,
   useRef,
 } from 'react'
 import {hotkey, createHotkey, getKeyBindings, listenKeyBindings} from '..'
 
-const useLiveHandler = handler => {
-  const handlerRef = useRef()
-  handlerRef.current = useCallback(handler, [handler])
-  return (...args) => handlerRef.current(...args)
+const useHandler = (handler) => {
+  const handlerRef = useRef(handler)
+  handlerRef.current = handler
+
+  return useRef(((...args) => handlerRef.current(...args))).current
 }
 
+
 export const useHotkey = (key, handler, options = {}) => {
-  const liveHandler = useLiveHandler(handler)
+  const liveHandler = useHandler(handler)
   useEffect(() => hotkey(key, liveHandler, options), [
     key,
     ...Object.values(options),
@@ -26,7 +27,7 @@ const ScopedHotkeyContext = React.createContext()
 
 export const useScopedHotkey = (key, handler, options = {}) => {
   const hotkeyRef = useContext(ScopedHotkeyContext)
-  const liveHandler = useLiveHandler(handler)
+  const liveHandler = useHandler(handler)
   useEffect(() => {
     if (!hotkeyRef) {
       console.warn('Could not find `ScopedHotkeyContext`')
