@@ -1,9 +1,8 @@
 # rx-hotkey
 
-> **WIP**: A simple hotkey library.
+> A simple hotkey library.
 
-[![build status](https://badgen.net/travis/ambar/rx-hotkey)](https://travis-ci.org/ambar/rx-hotkey)
-[![coverage status](https://badgen.net/codecov/c/github/ambar/rx-hotkey)](https://codecov.io/gh/ambar/rx-hotkey)
+[![Coverage Status](https://coveralls.io/repos/github/ambar/rx-hotkey/badge.svg?branch=master)](https://coveralls.io/github/ambar/rx-hotkey?branch=master)
 [![npm version](https://badgen.net/npm/v/rx-hotkey)](https://www.npmjs.com/package/rx-hotkey)
 [![minzipped size](https://badgen.net/bundlephobia/minzip/rx-hotkey)](https://bundlephobia.com/result?p=rx-hotkey)
 
