@@ -24,7 +24,7 @@ describe('hotkey', () => {
   it('ignores cases', () => {
     const fn = jest.fn()
     const keys = ['f1', 'home', 'arrowup', 'tab', 'escape', 'a', '1', ',']
-    const list = keys.map(k => hotkey(k, fn))
+    const list = keys.map((k) => hotkey(k, fn))
     for (const key of keys) {
       document.dispatchEvent(new KeyboardEvent('keydown', {key}))
       document.dispatchEvent(
@@ -32,7 +32,7 @@ describe('hotkey', () => {
       )
     }
     expect(fn).toHaveBeenCalledTimes(keys.length * 2)
-    list.forEach(n => n())
+    list.forEach((n) => n())
   })
 
   it('binds modifiers', () => {
@@ -83,7 +83,7 @@ describe('hotkey', () => {
     )
     expect(fn).toHaveBeenCalledTimes(4)
 
-    list.forEach(n => n())
+    list.forEach((n) => n())
     expect(getKeyBindings().size).toBe(0)
   })
 

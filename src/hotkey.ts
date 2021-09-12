@@ -11,49 +11,58 @@ import {canUseDOM, isValidEvent, parseHotkeys, matchEvent} from './utils'
 
 type Key = string
 // {[key]: metadata}
-type Bindings = Map<Key, object>
+type Metadata = Record<string, unknown>
+type KeyBinding = Map<Key, Metadata>
 // {[scope]: {[key]: metadata}}
-type ScopedBindings = Map<string, Bindings>
+type KeyBindings = Map<string, KeyBinding>
 const maxSequenceTimeout = 1500
-const keyBindings: Bindings = new Map()
-const keyBindings$ = new Subject<ScopedBindings>()
+const keyBindings: KeyBindings = new Map()
+const keyBindings$ = new Subject<KeyBindings>()
 
 type HotkeyOptions = {
   /** scope key in key bindings, defaults to `global` */
   scope?: string
 }
 
-const ensureArray = <T extends unknown>(x:  T): T[] => (Array.isArray(x) ? x : [x])
+const ensureArray = <T>(x: T | T[]): T[] => (Array.isArray(x) ? x : [x])
 
-export const createHotkey = (element?: HTMLElement | Document, {scope}: HotkeyOptions = {}) => {
+export const createHotkey = (
+  element?: HTMLElement | Document,
+  {scope}: HotkeyOptions = {}
+) => {
   if (!canUseDOM) {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => () => {}
   }
 
-  const keys$ = fromEvent<KeyboardEvent>(element!, 'keydown').pipe(filter(isValidEvent))
+  const keys$ = fromEvent<KeyboardEvent>(element!, 'keydown').pipe(
+    filter(isValidEvent)
+  )
   const scopeId = scope || 'global'
 
-  return (keys: Key, handler: (...e: KeyboardEvent[]) => void, metadata?: object) => {
-    let scopedKeyBindings = keyBindings.get(scopeId) as Bindings
-    if (!scopedKeyBindings) {
-      scopedKeyBindings = new Map()
-      keyBindings.set(scopeId, scopedKeyBindings)
+  return (
+    keys: Key,
+    handler: (...e: KeyboardEvent[]) => void,
+    metadata?: Metadata
+  ) => {
+    let keyBinding = keyBindings.get(scopeId) as KeyBinding
+    if (!keyBinding) {
+      keyBinding = new Map()
+      keyBindings.set(scopeId, keyBinding)
     }
-    scopedKeyBindings.set(keys, {...metadata})
-    keyBindings$.next(new Map(keyBindings) as ScopedBindings)
+    keyBinding.set(keys, {...metadata})
+    keyBindings$.next(new Map(keyBindings) as KeyBindings)
 
     const hotkeys = parseHotkeys(keys)
     const matchEvents = filter((events: KeyboardEvent | KeyboardEvent[]) =>
-      (ensureArray(events) as KeyboardEvent[]).every((e, i) =>
-        matchEvent(e, hotkeys[i])
-      )
+      ensureArray(events).every((e, i) => matchEvent(e, hotkeys[i]))
     )
     const output$: Observable<KeyboardEvent | KeyboardEvent[]> =
       hotkeys.length === 1
         ? keys$.pipe(matchEvents)
         : keys$.pipe(
             take(1),
-            switchMap(first$ =>
+            switchMap((first$) =>
               keys$.pipe(
                 startWith(first$),
                 bufferCount(hotkeys.length, 1),
@@ -63,22 +72,22 @@ export const createHotkey = (element?: HTMLElement | Document, {scope}: HotkeyOp
             matchEvents
           )
 
-    const subscription = output$.subscribe(r => {
-      handler(...(ensureArray(r) as KeyboardEvent[]))
+    const subscription = output$.subscribe((r) => {
+      handler(...ensureArray(r))
     })
     return () => {
-      scopedKeyBindings.delete(keys)
-      if (!scopedKeyBindings.size) {
+      keyBinding.delete(keys)
+      if (!keyBinding.size) {
         keyBindings.delete(scopeId)
       }
-      keyBindings$.next(new Map(keyBindings) as ScopedBindings)
+      keyBindings$.next(new Map(keyBindings) as KeyBindings)
       subscription.unsubscribe()
     }
   }
 }
 
 export const getKeyBindings = () => keyBindings
-export const listenKeyBindings = (handler: (bindings: ScopedBindings) => void) => {
+export const listenKeyBindings = (handler: (bindings: KeyBindings) => void) => {
   const subscription = keyBindings$.subscribe(handler)
   return () => subscription.unsubscribe()
 }
@@ -86,5 +95,3 @@ export const listenKeyBindings = (handler: (bindings: ScopedBindings) => void) =
 export const hotkey = createHotkey(canUseDOM ? document : undefined, {
   scope: 'global',
 })
-
-
