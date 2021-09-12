@@ -8,18 +8,13 @@ import {
   useScopedHotkeyContextProvider,
   useKeyBindings,
 } from './hooks'
-
 import dialogPolyfill from 'dialog-polyfill'
-// let dialogPolyfill
-// if (typeof window !== 'undefined') {
-//   dialogPolyfill = require('dialog-polyfill')
-// }
 
-export const useListHotkey = selector => {
+export const useListHotkey = (selector) => {
   const getFocusableItems = () => [...selector()]
 
-  const getActiveIndex = focusableItems =>
-    focusableItems.findIndex(item => item.contains(document.activeElement))
+  const getActiveIndex = (focusableItems) =>
+    focusableItems.findIndex((item) => item.contains(document.activeElement))
 
   const focusNext = () => {
     const focusableItems = getFocusableItems()
@@ -47,7 +42,7 @@ export const useListHotkey = selector => {
   useHotkey('k', focusPrev, {name: 'Prev item'})
 }
 
-const Receptacle = props => (
+const Receptacle = (props) => (
   <div
     {...props}
     css={{
@@ -59,7 +54,7 @@ const Receptacle = props => (
   />
 )
 
-const Button = props => (
+const Button = (props) => (
   <button
     {...props}
     css={{
@@ -92,7 +87,7 @@ const Timeline = () => {
   )
 }
 
-const TimelineItem = props => {
+const TimelineItem = (props) => {
   const nodeRef = useRef(null)
   const ScopedHotKeyContextProvider = useScopedHotkeyContextProvider(nodeRef, {
     scope: 'content',
@@ -209,7 +204,7 @@ const HelpDialog = () => {
 
 const SearchBar = () => {
   const inputRef = useRef(null)
-  const focusInput = e => {
+  const focusInput = (e) => {
     e.preventDefault()
     inputRef.current.focus()
   }
@@ -309,6 +304,7 @@ const KeyBindings = () => {
 }
 
 const GlobalScroll = () => {
+  // eslint-disable-next-line no-unused-vars
   const [_, set] = useSpring(() => ({
     to: {top: 0},
     onFrame(e) {
@@ -328,7 +324,7 @@ const GlobalScroll = () => {
   return null
 }
 
-export default () => {
+export default function TimelineExample() {
   return (
     <div css={{backgroundColor: '#e9e9e9'}}>
       <SearchBar />
