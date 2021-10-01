@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matchObject parses hotkey: alt+c shift+c 1`] = `
+Array [
+  Object {
+    "altKey": true,
+    "ctrlKey": false,
+    "key": "c",
+    "metaKey": false,
+    "shiftKey": false,
+  },
+  Object {
+    "altKey": false,
+    "ctrlKey": false,
+    "key": "c",
+    "metaKey": false,
+    "shiftKey": true,
+  },
+]
+`;
+
+exports[`matchObject parses hotkey: c 1`] = `
+Array [
+  Object {
+    "altKey": false,
+    "ctrlKey": false,
+    "key": "c",
+    "metaKey": false,
+    "shiftKey": false,
+  },
+]
+`;
+
+exports[`matchObject parses hotkey: ctrl+alt+c 1`] = `
+Array [
+  Object {
+    "altKey": true,
+    "ctrlKey": true,
+    "key": "c",
+    "metaKey": false,
+    "shiftKey": false,
+  },
+]
+`;
+
+exports[`matchObject parses hotkey: ctrl+c 1`] = `
+Array [
+  Object {
+    "altKey": false,
+    "ctrlKey": true,
+    "key": "c",
+    "metaKey": false,
+    "shiftKey": false,
+  },
+]
+`;
