@@ -30,12 +30,12 @@ export const createHotkey = (
   element?: HTMLElement | Document,
   {scope}: HotkeyOptions = {}
 ) => {
-  if (!canUseDOM) {
+  if (!element) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => () => {}
   }
 
-  const keys$ = fromEvent<KeyboardEvent>(element!, 'keydown').pipe(
+  const keys$ = fromEvent<KeyboardEvent>(element, 'keydown').pipe(
     filter(isValidEvent)
   )
   const scopeId = scope || 'global'

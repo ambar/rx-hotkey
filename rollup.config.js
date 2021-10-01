@@ -4,7 +4,10 @@ import pkg from './package.json'
 const deps = Object.keys({...pkg.dependencies, ...pkg.peerDependencies})
 const reExternal = new RegExp(`^(${deps.join('|')})($|/)`)
 
-export default [
+/**
+ * @type {import('rollup').RollupOptions[]}
+ */
+const config = [
   {
     input: pkg.source,
     output: [
@@ -17,7 +20,17 @@ export default [
         format: 'esm',
       },
     ],
-    plugins: [typescript()],
+    plugins: [
+      typescript({
+        include: [],
+        tsconfigOverride: {
+          include: ['src/**/*'],
+          exclude: ['**/*.spec.*', '**/__tests__'],
+        },
+      }),
+    ],
     external: (id) => (deps.length ? reExternal.test(id) : false),
   },
 ]
+
+export default config

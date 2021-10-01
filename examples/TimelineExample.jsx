@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import {jsx} from '@emotion/react'
 import {useSpring} from 'react-spring'
 import {Fragment, useRef, useState, useEffect} from 'react'
 import {

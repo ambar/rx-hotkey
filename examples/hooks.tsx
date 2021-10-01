@@ -5,12 +5,18 @@ import React, {
   useState,
   useRef,
 } from 'react'
-import {hotkey, createHotkey, getKeyBindings, listenKeyBindings} from '..'
+import {
+  hotkey,
+  createHotkey,
+  getKeyBindings,
+  listenKeyBindings,
+} from '../src/hotkey'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useHandler = <T extends (...args: any[]) => any>(handler: T) => {
   const handlerRef = useRef<T>(handler)
   handlerRef.current = handler
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
   return useRef(((...args: any[]) => handlerRef.current(...args)) as T).current
 }
 
@@ -39,7 +45,8 @@ export const useScopedHotkey = (
   const hotkeyRef = useContext(ScopedHotkeyContext)
   const liveHandler = useHandler(handler)
   useEffect(() => {
-    if (!hotkeyRef) {
+    if (!hotkeyRef?.current) {
+      // eslint-disable-next-line no-console
       console.warn('Could not find `ScopedHotkeyContext`')
       return
     }
@@ -52,6 +59,7 @@ export const useScopedHotkeyContextProvider = (
   nodeRef: React.MutableRefObject<HTMLElement>,
   options = {}
 ) => {
+  const hotkeyRef = useRef<typeof hotkey | null>(null)
   const createProvider = (): React.FC =>
     function Provider({children}) {
       return (
@@ -61,7 +69,6 @@ export const useScopedHotkeyContextProvider = (
       )
     }
 
-  const hotkeyRef = useRef(null)
   const providerRef = useRef(createProvider())
   // initialize before consuming
   useLayoutEffect(() => {
