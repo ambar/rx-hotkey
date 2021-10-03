@@ -10,40 +10,28 @@ const isInput = (el: HTMLElement) =>
 export const isValidEvent = (event: KeyboardEvent) =>
   !isInput(event.target as HTMLElement) && !isModifier(event.key)
 
-type ComboKey = {
-  key: string
-  ctrlKey: boolean
-  altKey: boolean
-  metaKey: boolean
-  shiftKey: boolean
+const modifiers = ['ctrl', 'alt', 'shift', 'meta'] as const
+type Modifier = typeof modifiers[number]
+type ComboKey = {key: string} & {
+  [k in `${Modifier}Key`]: boolean
 }
 
 export const parseHotkeys = (keys: string) =>
+  // eg. `ctrl+k f`
   keys.split(' ').map((key) => {
-    const hotkey = {
-      key: '',
-      ctrlKey: false,
-      altKey: false,
-      metaKey: false,
-      shiftKey: false,
-    }
-    return key
-      .split('+')
-      .map((k) => k.toLowerCase())
-      .reduce((o, k) => {
-        if (k === 'ctrl') {
-          o.ctrlKey = true
-        } else if (k === 'alt') {
-          o.altKey = true
-        } else if (k === 'shift') {
-          o.shiftKey = true
-        } else if (k === 'meta') {
-          o.metaKey = true
-        } else {
-          o.key = k
-        }
-        return o
-      }, hotkey)
+    // eg. `ctrl+k`
+    const list = key.split('+').map((k) => k.toLowerCase())
+    const parsed = {key: ''} as ComboKey
+    modifiers.forEach((x) => {
+      parsed[`${x}Key`] = list.includes(x)
+    })
+    list.some((x) => {
+      if (!modifiers.includes(x as Modifier)) {
+        parsed.key = x
+        return true
+      }
+    })
+    return parsed
   })
 
 type PlainObject = Record<string, unknown>
