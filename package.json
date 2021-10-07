@@ -38,7 +38,7 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-spring": "^8.0.7",
-    "recommended": "^0.0.2",
+    "recommended": "^0.0.6",
     "rollup": "^2.56.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "rxjs": "^6.4.0",
