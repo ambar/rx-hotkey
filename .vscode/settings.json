@@ -1,0 +1,7 @@
+{
+  "prettier.prettierPath": "node_modules/prettier",
+  "eslint.nodePath": "node_modules/recommended",
+  "eslint.options": {
+    "resolvePluginsRelativeTo": "node_modules/@recommended/eslint-config"
+  }
+}
