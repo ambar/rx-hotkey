@@ -1,7 +1,7 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# Installs dependencies with Bun, runs tests, and reports coverage.
+# See https://bun.com/docs and https://github.com/oven-sh/setup-bun
 
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -10,24 +10,23 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        # jest runs under Node; Bun is the package manager / bundler
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: test
-        run: |
-          yarn
-          yarn jest --coverage
-      - name: report
-        uses: coverallsapp/github-action@v1.0.1
+          node-version: 20
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+      - name: Test
+        run: bun run test
+      - name: Report coverage
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
